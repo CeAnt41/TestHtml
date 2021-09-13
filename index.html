@@ -52,7 +52,7 @@
 
     // GeoJSON 파싱 및 로드 테스트
     var resion = JSON.parse(resion);
-    console.log("행정구역 로드 데이터 확인", resion[0].features); // 행정구역 로드 데이터 확인
+    console.log('행정구역 로드 데이터 확인 : ', resion[0].features); // 행정구역 로드 데이터 확인
 
     // 데이터 레이어 생성 테스트
     mapsModule.addGeoJson(resion[0].features[8]);   // 서울 데이터 레이어 체크
@@ -60,7 +60,7 @@
 
     // 좌표 검색 테스트
     var address = mapsModule.searchAddressToLatlon(37.3595704, 127.105399); // 그린 팩토리
-    console.log(address); // 주소 확인
+    console.log('좌표 검색 테스트 주소 확인 : ', address); // 주소 확인
 
     // 데이터 레이어 스타일 설정 테스트
     mapsModule.setDataLayerStyle('red');
@@ -91,15 +91,15 @@
 
     // 주소 검색 테스트
     var point = mapsModule.searchLatLonToAddress("대구 북구 구리로 250");
-    console.log(point); // 좌표 확인
+    console.log('주소 검색 테스트 좌표 확인 : ', point); // 좌표 확인
 
     // 마커 찾기 테스트
     var getMarker = mapsModule.getMarkerToLatLon(37.3595704, 127.105399);
-    console.log(getMarker);
+    console.log('마커 찾기 테스트 : ', getMarker);
 
     // 정보 창 HTML 생성
     var contentString = mapsModule.createDefaultInfoContent('Header', 'Body', 'Footer');
-    console.log(contentString);
+    console.log('정보 창 HTML 생성 : ', contentString);
     
     // 정보 창 마커에 추가 테스트
     mapsModule.addInfoWindowOnMarker(contentString, getMarker);
@@ -119,7 +119,7 @@
 
     // 정보 창 좌표에 표시 및 반환 테스트
     var infoWindowOnCoordinate = mapsModule.popupInfoWindowOnCoordinate(contentString, 37.55, 127.47);
-    console.log(infoWindowOnCoordinate);
+    console.log('정보 창 좌표에 표시 및 반환 테스트 : ', infoWindowOnCoordinate);
 </script>
 </body>
 </html>
