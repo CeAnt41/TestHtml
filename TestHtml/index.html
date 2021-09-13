@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <!-- Naver Maps API 로드 -->
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=a8gabxq8m7"></script>
+    <title>네이버 지도 API TEST</title>
+</head>
+<body>
+<!-- 지도를 삽입할 HTML 요소 -->
+<div id="map" style="width:100%;height:500px;"></div>
+
+<!-- 모듈 로드 -->
+<script type="text/javascript" src="naverMapsModule.js"></script>
+<!-- 행정구역 GeoJSON 로드 -->
+<script type="text/javascript" src="./data/region/TL_SCCO_CTPRVN.json"></script>
+<!-- Geocoder 서브 모듈 로드 -->
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_CLIENT_ID&submodules=geocoder"></script>
+
+<script>
+    // 마커그룹 생성
+    var MARKER_SPRITE_POSITION = {
+        "TEST1": [37.3595704, 127.105399],
+        "TEST2": [37.3505700, 127.105300]
+    };
+
+    
+    var jeju = new naver.maps.LatLng(33.3590628, 126.534361),
+    busan = new naver.maps.LatLng(35.1797865, 129.0750194),
+    dokdo = new naver.maps.LatLngBounds(
+                new naver.maps.LatLng(37.2380651, 131.8562652),
+                new naver.maps.LatLng(37.2444436, 131.8786475)),
+    seoul = new naver.maps.LatLngBounds(
+                new naver.maps.LatLng(37.42829747263545, 126.76620435615891),
+                new naver.maps.LatLng(37.7010174173061, 127.18379493229875));
+    
+
+    // 모듈 function 인스턴스 생성
+    var mapsModule = new naverMapsModule();
+
+    // Map 생성
+    mapsModule.initMap(10); // 초기 zoom level 10
+
+    // 마커 추가 테스트
+    mapsModule.addMarkers(MARKER_SPRITE_POSITION);
+    mapsModule.addMarker("MARKER", 37.350424, 127.103801);
+
+    // 마커 최적화 실행
+    mapsModule.markersOptimization();
+
+    // GeoJSON 파싱 및 로드 테스트
+    var resion = JSON.parse(resion);
+    console.log("행정구역 로드 데이터 확인", resion[0].features); // 행정구역 로드 데이터 확인
+
+    // 데이터 레이어 생성 테스트
+    mapsModule.addGeoJson(resion[0].features[8]);   // 서울 데이터 레이어 체크
+    mapsModule.addGeoJson(resion[0].features[5]);   // 대구 데이터 레이어 체크
+
+    // 좌표 검색 테스트
+    var address = mapsModule.searchAddressToLatlon(37.3595704, 127.105399); // 그린 팩토리
+    console.log(address); // 주소 확인
+
+    // 데이터 레이어 스타일 설정 테스트
+    mapsModule.setDataLayerStyle('red');
+
+    // Get Map
+    var map = mapsModule.getMap();
+
+    // 데이터 레이어 스타일 재설정 테스트
+    map.data.addListener('mouseover', function(e) {
+        var feature = e.feature;
+        mapsModule.setFeatureStyle(feature, 'green');
+    });
+
+    // 데이터 레이어 스타일 복원 테스트
+    map.data.addListener('mouseout', function(e) {
+        var feature = e.feature;
+        mapsModule.resetFeatureStyle(feature);
+    });
+
+    // 데이터 레이어 삭제 테스트
+    map.data.addListener('click', function(e) {
+        var geojson = e.feature.getRaw();
+        mapsModule.removeGeoJson(geojson);
+    });
+
+    // 지도 영역 제한 테스트 (제한 영역 서울, minZoom level 11)
+    mapsModule.limitBounds(37.42829747263545, 126.76620435615891, 37.7010174173061, 127.18379493229875, 11);
+
+    // 주소 검색 테스트
+    var point = mapsModule.searchLatLonToAddress("대구 북구 구리로 250");
+    console.log(point); // 좌표 확인
+
+    // 마커 찾기 테스트
+    var getMarker = mapsModule.getMarkerToLatLon(37.3595704, 127.105399);
+    console.log(getMarker);
+
+    // 정보 창 HTML 생성
+    var contentString = mapsModule.createDefaultInfoContent('Header', 'Body', 'Footer');
+    console.log(contentString);
+    
+    // 정보 창 마커에 추가 테스트
+    mapsModule.addInfoWindowOnMarker(contentString, getMarker);
+
+    // 정보 창 스타일 변경 테스트
+    mapsModule.setInfoWindowStyle(getMarker.infoWindow, 'red', 'white');
+    
+    // 정보 창 열기, 닫기 테스트
+    naver.maps.Event.addListener(getMarker, "click", function(e) {
+        var map = mapsModule.getMap();
+        if (getMarker.infoWindow.getMap()) {
+            getMarker.infoWindow.close();
+        } else {
+            getMarker.infoWindow.open(map, getMarker);
+        }
+    });
+
+    // 정보 창 좌표에 표시 및 반환 테스트
+    var infoWindowOnCoordinate = mapsModule.popupInfoWindowOnCoordinate(contentString, 37.55, 127.47);
+    console.log(infoWindowOnCoordinate);
+</script>
+</body>
+</html>
