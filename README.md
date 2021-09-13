@@ -2,6 +2,8 @@
 
 Naver Maps API를 활용한 몇가지 기능들을 클래스처럼 사용할 수 있도록 작성(naverMapsModule.js)
 
+테스트 URL : https://ceant41.github.io/TestHtml/
+
 [Test 내용]
 1. 모듈 function 인스턴스 생성
 2. Map 생성
